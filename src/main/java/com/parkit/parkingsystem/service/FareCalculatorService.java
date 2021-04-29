@@ -1,9 +1,16 @@
 package com.parkit.parkingsystem.service;
 
 import com.parkit.parkingsystem.constants.Fare;
+import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.Ticket;
 
 public class FareCalculatorService {
+
+	private TicketDAO ticketDAO;
+
+	public FareCalculatorService(TicketDAO ticketDAO) {
+		this.ticketDAO = ticketDAO;
+	}
 
 	public double getDuration(Ticket ticket) {
 		if ((ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime()))) {
@@ -14,9 +21,10 @@ public class FareCalculatorService {
 	}
 
 	public void calculateFare(Ticket ticket) {
-
+		TicketDAO ticketDAO = new TicketDAO();
+		int numberOfDuplication = ticketDAO.getDuplicationTicket(ticket.getVehicleRegNumber());
 		double duration = 0;
-		final double hourTime = 60 * 60 * 1000;
+		double hourTime = 60 * 60 * 1000;
 		try {
 			duration = getDuration(ticket);
 		} catch (IllegalArgumentException e) {
@@ -36,6 +44,10 @@ public class FareCalculatorService {
 			break;
 		default:
 			throw new IllegalArgumentException("Unkown Parking Type");
+		}
+		if (numberOfDuplication > 0) {
+			ticket.setPrice(ticket.getPrice() * 0.95);
+			return;
 		}
 	}
 }

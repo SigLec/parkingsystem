@@ -16,7 +16,7 @@ public class ParkingService {
 
 	private static final Logger logger = LogManager.getLogger("ParkingService");
 
-	private static FareCalculatorService fareCalculatorService = new FareCalculatorService();
+	private FareCalculatorService fareCalculatorService;
 
 	private InputReaderUtil inputReaderUtil;
 	private ParkingSpotDAO parkingSpotDAO;
@@ -26,6 +26,7 @@ public class ParkingService {
 		this.inputReaderUtil = inputReaderUtil;
 		this.parkingSpotDAO = parkingSpotDAO;
 		this.ticketDAO = ticketDAO;
+		this.fareCalculatorService = new FareCalculatorService(ticketDAO);
 	}
 
 	public void processIncomingVehicle() {
@@ -39,15 +40,20 @@ public class ParkingService {
 
 				Date inTime = new Date();
 				Ticket ticket = new Ticket();
+				int numberOfDuplication = ticketDAO.getDuplicationTicket(vehicleRegNumber);
+				// -----------------------------------------------------------------
 				// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
 				// ticket.setId(ticketID);
-				// -------------------------------------------------------------------> ??????
 				ticket.setParkingSpot(parkingSpot);
 				ticket.setVehicleRegNumber(vehicleRegNumber);
 				ticket.setPrice(0);
 				ticket.setInTime(inTime);
 				ticket.setOutTime(null);
 				ticketDAO.saveTicket(ticket);
+				if (numberOfDuplication > 0) {
+					System.out.println(
+							"Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount.");
+				}
 				System.out.println("Generated Ticket and saved in DB");
 				System.out.println("Please park your vehicle in spot number:" + parkingSpot.getId());
 				System.out.println("Recorded in-time for vehicle number:" + vehicleRegNumber + " is:" + inTime);
@@ -117,9 +123,10 @@ public class ParkingService {
 			} else {
 				System.out.println("Unable to update ticket information. Error occurred");
 			}
+		} catch (IllegalArgumentException e) {
+			logger.error(e.getMessage()); // Ajout de l'exception de fareCalculatorService
 		} catch (Exception e) {
 			logger.error("Unable to process exiting vehicle", e);
 		}
-
 	}
 }
