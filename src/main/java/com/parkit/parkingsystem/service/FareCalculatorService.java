@@ -21,7 +21,6 @@ public class FareCalculatorService {
 	}
 
 	public void calculateFare(Ticket ticket) {
-		TicketDAO ticketDAO = new TicketDAO();
 		int numberOfDuplication = ticketDAO.getDuplicationTicket(ticket.getVehicleRegNumber());
 		double duration = 0;
 		double hourTime = 60 * 60 * 1000;
