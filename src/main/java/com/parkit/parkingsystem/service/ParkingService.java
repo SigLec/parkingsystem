@@ -39,16 +39,11 @@ public class ParkingService {
 															// false
 
 				Date inTime = new Date();
-				Ticket ticket = new Ticket();
+				// Utilisation du constructeur en remplacement des set
+				Ticket ticket = new Ticket(parkingSpot, vehicleRegNumber, 0, inTime, null); 
 				int numberOfDuplication = ticketDAO.getDuplicationTicket(vehicleRegNumber);
-				// -----------------------------------------------------------------
 				// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
 				// ticket.setId(ticketID);
-				ticket.setParkingSpot(parkingSpot);
-				ticket.setVehicleRegNumber(vehicleRegNumber);
-				ticket.setPrice(0);
-				ticket.setInTime(inTime);
-				ticket.setOutTime(null);
 				ticketDAO.saveTicket(ticket);
 				if (numberOfDuplication > 0) {
 					System.out.println(
