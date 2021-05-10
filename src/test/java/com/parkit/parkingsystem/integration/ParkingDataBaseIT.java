@@ -26,6 +26,26 @@ import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
 @ExtendWith(MockitoExtension.class)
+
+/*
+ * Integration tests when a car is entering and exiting the parking
+ * 
+ * @see dataBaseTestConfig
+ * 
+ * @see parkingSpotDAO
+ * 
+ * @see ticketDAO
+ * 
+ * @see dataBasePrepareService
+ * 
+ * @see inputReaderUtil
+ * 
+ * @see parkingService
+ * 
+ * @see parkingSpot
+ * 
+ */
+
 public class ParkingDataBaseIT {
 
 	private static DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();

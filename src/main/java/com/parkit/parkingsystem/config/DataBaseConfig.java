@@ -9,15 +9,30 @@ import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/*
+ * Class to make connection with database
+ */
+
 public class DataBaseConfig {
 
 	private static final Logger logger = LogManager.getLogger("DataBaseConfig");
+
+	/*
+	 * Get connection with database with url, user and password informations
+	 * 
+	 * @return connection to the database
+	 */
 
 	public Connection getConnection() throws ClassNotFoundException, SQLException {
 		logger.info("Create DB connection");
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		return DriverManager.getConnection("jdbc:mysql://localhost:3306/prod?serverTimezone=UTC", "root", "rootroot");
 	}
+	/*
+	 * Close connection with database
+	 * 
+	 * @ param con instance of Connection
+	 */
 
 	public void closeConnection(Connection con) {
 		if (con != null) {
@@ -30,6 +45,12 @@ public class DataBaseConfig {
 		}
 	}
 
+	/*
+	 * Close preparedStatement
+	 * 
+	 * @param ps instance of PreparedStatement
+	 */
+
 	public void closePreparedStatement(PreparedStatement ps) {
 		if (ps != null) {
 			try {
@@ -40,6 +61,11 @@ public class DataBaseConfig {
 			}
 		}
 	}
+	/*
+	 * Close resultSet
+	 * 
+	 * @param rs instance of ResultSet
+	 */
 
 	public void closeResultSet(ResultSet rs) {
 		if (rs != null) {

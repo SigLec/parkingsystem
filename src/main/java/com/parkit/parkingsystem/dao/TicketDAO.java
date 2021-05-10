@@ -14,6 +14,10 @@ import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 
+/*
+ * Save, get and update ticket in database
+ */
+
 public class TicketDAO {
 
 	private static final Logger logger = LogManager.getLogger("TicketDAO");

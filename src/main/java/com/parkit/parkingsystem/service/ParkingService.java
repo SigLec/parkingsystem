@@ -22,6 +22,16 @@ public class ParkingService {
 	private ParkingSpotDAO parkingSpotDAO;
 	private TicketDAO ticketDAO;
 
+	/*
+	 * Instantiation of a new parkingService
+	 * 
+	 * @param inputReaderUtil
+	 * 
+	 * @param parkingSpotDAO
+	 * 
+	 * @param ticketDAO
+	 * 
+	 */
 	public ParkingService(InputReaderUtil inputReaderUtil, ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO) {
 		this.inputReaderUtil = inputReaderUtil;
 		this.parkingSpotDAO = parkingSpotDAO;
@@ -29,6 +39,12 @@ public class ParkingService {
 		this.fareCalculatorService = new FareCalculatorService(ticketDAO);
 	}
 
+	/*
+	 * When a vehicle enters the parking lot : Gets the next available parking spot;
+	 * Gets the vehicle registration number; Update the parking spot on unavailable;
+	 * Update parking on database; Create a new ticket with all assignments; Save
+	 * the ticket in database
+	 */
 	public void processIncomingVehicle() {
 		try {
 			ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
@@ -40,7 +56,7 @@ public class ParkingService {
 
 				Date inTime = new Date();
 				// Utilisation du constructeur en remplacement des set
-				Ticket ticket = new Ticket(parkingSpot, vehicleRegNumber, 0, inTime, null); 
+				Ticket ticket = new Ticket(parkingSpot, vehicleRegNumber, 0, inTime, null);
 				int numberOfDuplication = ticketDAO.getDuplicationTicket(vehicleRegNumber);
 				// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
 				// ticket.setId(ticketID);
@@ -58,11 +74,22 @@ public class ParkingService {
 		}
 	}
 
+	/*
+	 * Gets the vehicle registration number write by user
+	 * 
+	 * @return vehicle registration number
+	 */
+
 	private String getVehicleRegNumber() throws Exception {
 		System.out.println("Please type the vehicle registration number and press enter key");
 		return inputReaderUtil.readVehicleRegistrationNumber();
 	}
 
+	/*
+	 * Gets the next available slot depending on vehicle type.
+	 * 
+	 * @return parking spot
+	 */
 	public ParkingSpot getNextParkingNumberIfAvailable() {
 		int parkingNumber = 0;
 		ParkingSpot parkingSpot = null;
@@ -82,6 +109,11 @@ public class ParkingService {
 		return parkingSpot;
 	}
 
+	/*
+	 * Gets the vehicle type depending on what's user selection
+	 * 
+	 * @return vehicle type
+	 */
 	private ParkingType getVehicleType() {
 		System.out.println("Please select vehicle type from menu");
 		System.out.println("1 CAR");
@@ -101,6 +133,10 @@ public class ParkingService {
 		}
 	}
 
+	/*
+	 * When a vehicle leaves the parking lot Gets the ticket with the vehicle
+	 * registration number Out time is added and price generated
+	 */
 	public void processExitingVehicle() {
 		try {
 			String vehicleRegNumber = getVehicleRegNumber();

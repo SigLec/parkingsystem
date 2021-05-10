@@ -8,6 +8,10 @@ import org.junit.jupiter.api.Test;
 
 import com.parkit.parkingsystem.constants.ParkingType;
 
+/*
+ * Unit test for ParkingSpot class
+ */
+
 class ParkingSpotTest {
 
 	private static ParkingSpot parkingSpot;

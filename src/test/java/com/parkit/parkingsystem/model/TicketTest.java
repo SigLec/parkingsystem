@@ -9,6 +9,10 @@ import org.junit.jupiter.api.Test;
 
 import com.parkit.parkingsystem.constants.ParkingType;
 
+/*
+ * Unit test for Ticket class
+ */
+
 class TicketTest {
 
 	private static Ticket ticket;

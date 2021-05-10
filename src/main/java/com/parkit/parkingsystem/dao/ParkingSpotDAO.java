@@ -13,7 +13,7 @@ import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
 
 /*
- * 
+ * Give the next available parking slot and update result in database
  */
 
 public class ParkingSpotDAO {
@@ -22,13 +22,9 @@ public class ParkingSpotDAO {
 	public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
 	/*
-	 * Give the next available slot connecting to the database and executing SQL
-	 * query
+	 * Give the next available slot in Parking
 	 * 
-	 * @param parkingType
-	 * 
-	 * @return result : -1 if the parking is full or the number of the parking spot
-	 * available
+	 * @return result as the number of next available slot
 	 */
 
 	public int getNextAvailableSlot(ParkingType parkingType) {
