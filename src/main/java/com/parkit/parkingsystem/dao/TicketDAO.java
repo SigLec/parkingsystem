@@ -20,11 +20,20 @@ public class TicketDAO {
 
 	public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+	/*
+	 * Save ticket informations in database with the SQL query.
+	 * 
+	 * @param ticket
+	 * 
+	 * @return boolean
+	 */
+
 	public boolean saveTicket(Ticket ticket) {
+		PreparedStatement ps = null;
 		Connection con = null;
 		try {
 			con = dataBaseConfig.getConnection();
-			PreparedStatement ps = con.prepareStatement(DBConstants.SAVE_TICKET);
+			ps = con.prepareStatement(DBConstants.SAVE_TICKET);
 			// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
 			// ps.setInt(1,ticket.getId());
 			ps.setInt(1, ticket.getParkingSpot().getId());
@@ -36,20 +45,32 @@ public class TicketDAO {
 		} catch (Exception ex) {
 			logger.error("Error fetching next available slot", ex);
 		} finally {
+			dataBaseConfig.closePreparedStatement(ps);
 			dataBaseConfig.closeConnection(con);
 		}
 		return false;
 	}
 
+	/*
+	 * Get ticket informations in database with the SQL query. The vehicle
+	 * registration number needs to be known in database.
+	 * 
+	 * @param vehicleRegNumber
+	 * 
+	 * @return ticket
+	 */
+
 	public Ticket getTicket(String vehicleRegNumber) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 		Connection con = null;
 		Ticket ticket = null;
 		try {
 			con = dataBaseConfig.getConnection();
-			PreparedStatement ps = con.prepareStatement(DBConstants.GET_TICKET);
+			ps = con.prepareStatement(DBConstants.GET_TICKET);
 			// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
 			ps.setString(1, vehicleRegNumber);
-			ResultSet rs = ps.executeQuery();
+			rs = ps.executeQuery();
 			if (rs.next()) {
 				ticket = new Ticket();
 				ParkingSpot parkingSpot = new ParkingSpot(rs.getInt(1), ParkingType.valueOf(rs.getString(6)), false);
@@ -60,42 +81,63 @@ public class TicketDAO {
 				ticket.setInTime(rs.getTimestamp(4));
 				ticket.setOutTime(rs.getTimestamp(5));
 			}
-			dataBaseConfig.closeResultSet(rs);
-			dataBaseConfig.closePreparedStatement(ps);
 		} catch (Exception ex) {
 			logger.error("Error fetching next available slot", ex);
 		} finally {
+			dataBaseConfig.closeResultSet(rs);
+			dataBaseConfig.closePreparedStatement(ps);
 			dataBaseConfig.closeConnection(con);
 		}
 		return ticket;
 	}
 
+	/*
+	 * Executing the SQL query, we will know if the vehicle registration number is
+	 * already known in the database.
+	 * 
+	 * @param vehicleRegNumber
+	 * 
+	 * @return ticket
+	 */
+
 	public int getDuplicationTicket(String vehicleRegNumber) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 		Connection con = null;
 		int duplication = 0;
 		try {
 			con = dataBaseConfig.getConnection();
-			PreparedStatement ps = con.prepareStatement(DBConstants.GET_DUPLICATION_TICKET);
+			ps = con.prepareStatement(DBConstants.GET_DUPLICATION_TICKET);
 			ps.setString(1, vehicleRegNumber);
-			ResultSet rs = ps.executeQuery();
+			rs = ps.executeQuery();
 			if (rs.next()) {
 				duplication = rs.getInt(1);
 			}
-			dataBaseConfig.closeResultSet(rs);
-			dataBaseConfig.closePreparedStatement(ps);
 		} catch (Exception ex) {
 			logger.error("Error fetching next available slot", ex);
 		} finally {
+			dataBaseConfig.closeResultSet(rs);
+			dataBaseConfig.closePreparedStatement(ps);
 			dataBaseConfig.closeConnection(con);
 		}
 		return duplication;
 	}
 
+	/*
+	 * Update ticket will add out time, price and Id to the ticket executing SQL
+	 * query.
+	 * 
+	 * @param ticket
+	 * 
+	 * @return boolean
+	 */
+
 	public boolean updateTicket(Ticket ticket) {
+		PreparedStatement ps = null;
 		Connection con = null;
 		try {
 			con = dataBaseConfig.getConnection();
-			PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TICKET);
+			ps = con.prepareStatement(DBConstants.UPDATE_TICKET);
 			ps.setDouble(1, ticket.getPrice());
 			ps.setTimestamp(2, new Timestamp(ticket.getOutTime().getTime()));
 			ps.setInt(3, ticket.getId());
@@ -104,6 +146,7 @@ public class TicketDAO {
 		} catch (Exception ex) {
 			logger.error("Error saving ticket info", ex);
 		} finally {
+			dataBaseConfig.closePreparedStatement(ps);
 			dataBaseConfig.closeConnection(con);
 		}
 		return false;
