@@ -121,7 +121,10 @@ public class ParkingServiceTest {
 		when(inputReaderUtil.readSelection()).thenReturn(1);
 		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
 		when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+		when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
 		when(ticketDAO.getDuplicationTicket(anyString())).thenReturn(0);
+		when(ticketDAO.saveTicket(any(Ticket.class))).thenReturn(true);
+
 	}
 
 	@Test
@@ -135,6 +138,7 @@ public class ParkingServiceTest {
 		when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
 		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
 		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
+		when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
 		// WHEN
 		parkingService.processExitingVehicle();
 		// THEN
